@@ -121,13 +121,11 @@ async function getWarframeData() {
         })
         .then((data) => {
             const fetchedData = data
-                // Filter out Warframes that shouldn't be in the "Warframes" category
+                // Filter to only include Warframes (no mechs, companions, etc.)
                 .filter(
                     (warframe) =>
-                        warframe.category == "Warframes" &&
-                        warframe.name != "Helminth" &&
-                        warframe.name != "Voidrig" &&
-                        warframe.name != "Bonewidow"
+                        warframe.productCategory == "Suits" &&
+                        warframe.name !== "Excalibur Umbra"
                 )
                 // Map the data to the desired format
                 .map((warframe) => ({
@@ -170,14 +168,12 @@ async function getWeaponData() {
         .then((data) => {
             const fetchedData = data
 
-                // Filter out weapons that shouldn't be in the "Weapons" category
-                // and that have an empty description (which means they are a weapon part)
+                // Filter to only include full weapons (no parts)
                 .filter(
                     (weapon) =>
-                        (weapon.category == "Primary" ||
-                            weapon.category == "Secondary" ||
-                            weapon.category == "Melee") &&
-                        weapon.description != ""
+                        (weapon.productCategory == "LongGuns" ||
+                            weapon.productCategory == "Pistols" ||
+                            weapon.productCategory == "Melee")
                 )
                 // Map the data to the desired format
                 .map((weapon) => ({
