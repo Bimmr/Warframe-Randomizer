@@ -113,8 +113,8 @@ function replaceTextIcons(text) {
 
 // Function to fetch Warframe data
 async function getWarframeData() {
-    return await fetch("https://api.warframestat.us/warframes/search/Caliban")
-        //return await fetch("https://api.warframestat.us/warframes")
+    //return await fetch("https://api.warframestat.us/warframes/search/Caliban")
+        return await fetch("https://api.warframestat.us/warframes")
         .then((response) => {
             if (!response.ok) throw new Error(`API error: ${response.status}`)
             return response.json()
