@@ -43,7 +43,6 @@ body {
     margin: 10px;
     overflow: hidden;
     overflow-y: auto;
-    text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 8;
     line-clamp: 8;
