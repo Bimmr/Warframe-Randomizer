@@ -64,7 +64,7 @@ let weaponData = []
 
 // Function to fetch text icons
 async function getTextIcons() {
-    return fetch("https://browse.wf/warframe-public-export-plus/ExportTextIcons.json1")
+    return fetch("https://browse.wf/warframe-public-export-plus/ExportTextIcons.json")
         .then((response) => {
             if (!response.ok) throw new Error(`Failed to fetch text icons: ${response.status}`)
             return response.json()
