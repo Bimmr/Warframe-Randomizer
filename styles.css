@@ -1,0 +1,304 @@
+:root{
+    --background: #2a2a2a;
+    --text-color: #fff;
+    --primary-color: #780bc0;
+    --secondary-color: #5e0a9b;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+}
+html {
+    font-family: "Roboto", sans-serif;
+}
+body {
+    overflow-x: hidden;
+    background: var(--background);
+    color: var(--text-color);
+}
+
+/* Misc styles */
+
+.card {
+    box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1px);
+    background: rgba(111, 111, 111, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover{
+        transform: scale(1.05);
+        box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
+        background: rgba(111, 111, 111, 0.4);
+    }
+}
+.name {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px;
+}
+.description {
+    font-size: 14px;
+    margin: 10px;
+    overflow: hidden;
+    overflow-y: auto;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    line-clamp: 8;
+    -webkit-box-orient: vertical;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) var(--background);
+}
+
+.text-icon{
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+}
+
+.randomize {
+    grid-area: footer;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+.randomize:hover {
+    background-color: var(--secondary-color)
+}
+
+/* Section styles */
+
+.warframe,
+.weapons .primary,
+.weapons .secondary,
+.weapons .melee {
+    border-radius: 5px;
+    box-shadow: 0 0px 2px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    padding: 5px;
+}
+
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "warframe weapons";
+    grid-template-columns: 0.7fr 0.3fr;
+    grid-template-rows: auto 1fr;
+    padding: 20px;
+    max-height: calc(100vh - 40px);
+    gap: 20px;
+}
+
+.container h1 {
+    grid-area: header;
+    text-align: center;
+    background: var(--secondary-color);
+    margin: -20px;
+    padding: 10px;
+    margin-bottom: -1px;
+    
+}
+
+.warframe {
+    grid-area: warframe;
+    display: grid;
+    grid-template-rows:
+        [image-start info-start] 1fr
+        [image-end info-end footer-start] auto;
+    grid-template-columns: [image-start footer-start] calc(512px * 0.85) [image-end info-start] auto [info-end footer-end] /* 512 is the width of the image */;
+    align-items: center;
+}
+.warframe .image {
+    grid-area: image;
+    width: 512px;
+    height: 512px;
+    position: relative;
+    mask-image: linear-gradient(rgba(0, 0, 0, 1) 80%, transparent);
+}
+.warframe .info,
+.weapons .info {
+    grid-area: info;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+}
+.warframe .info .details {
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+.warframe .info .abilities {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    flex-grow: 1;
+}
+
+.warframe .ability {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 10px;
+}
+.warframe .ability .image {
+    width: 50px;
+    height: 50px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.warframe .ability .description {
+    max-height: 175px;
+    text-align: center;
+}
+
+.weapons {
+    grid-area: weapons;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.weapons .primary,
+.weapons .secondary,
+.weapons .melee {
+    display: grid;
+    grid-template-rows:
+        [image-start info-start] 1fr
+        [image-end info-end footer-start] auto;
+    grid-template-columns: [image-start footer-start] 175px [image-end info-start] auto [info-end footer-end];
+}
+.weapons .image {
+    grid-area: image;
+    width: 200px;
+}
+
+.weapons .description {
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+}
+
+
+/* Responsive Classes */
+
+@media (width <=1500px) {
+    .container {
+        grid-template-areas:
+            "header"
+            "warframe"
+            "weapons";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+    .weapons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+@media (width <= 1180px) {
+    .weapons {
+        grid-template-columns: unset;
+        grid-template-rows: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+@media (width <= 1000px) {
+    .warframe {
+        grid-template-columns: unset;
+        grid-template-rows: unset;
+        grid-template-areas:
+            "image"
+            "info"
+            "footer";
+    }
+    .warframe .image {
+        justify-self: center;
+    }
+}
+@media (width <= 560px) {
+    .weapons .primary,
+    .weapons .secondary,
+    .weapons .melee {
+        grid-template-columns: unset;
+        grid-template-rows: unset;
+        grid-template-areas:
+            "image"
+            "info"
+            "footer";
+    }
+    .warframe .image {
+        width: 100%;
+    }
+
+    .weapons .image {
+        justify-self: center;
+    }
+}
+
+/* Skeleton classes */
+
+@keyframes skeleton {
+    0% {
+        background-color: hsl(0, 0%, 50%);
+    }
+    100% {
+        background-color: hsl(0, 0%, 35%);
+    }
+}
+.skeleton {
+    animation: skeleton 1s linear infinite alternate;
+    color: transparent;
+    opacity: 0.9;
+}
+.name.skeleton {
+    min-height: 30px;
+    border-radius: 1px;
+}
+.description.skeleton {
+    min-height: 50px;
+    border-radius: 1px;
+    position: relative;
+}
+.warframe .image.skeleton {
+    width: 350px;
+    mask-image: none;
+}
+.warframe .ability .image.skeleton {
+    width: 50px;
+    height: 50px;
+}
+.warframe .ability :is(.name, .description).skeleton {
+    width: 100%;
+}
+.weapons .image.skeleton {
+    width: 175px;
+    height: 175px;
+}
+.description.skeleton::before,
+.description.skeleton::after {
+    content: "";
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #3f3f3f;
+    position: absolute;
+}
+.description.skeleton::before {
+    top: 33%;
+}
+.description.skeleton::after {
+    top: 66%;
+}
