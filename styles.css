@@ -220,11 +220,17 @@ body {
         grid-template-rows: unset;
         grid-template-areas:
             "image"
-            "info"
-            "footer";
+            "footer"
+            "info";
     }
     .warframe .image {
         justify-self: center;
+    }
+    .warframe .randomize{
+        margin: 10px 0;
+    }
+    .card{
+        cursor: default;
     }
     .card:hover{
         transform: scale(1);
@@ -240,8 +246,8 @@ body {
         grid-template-rows: unset;
         grid-template-areas:
             "image"
-            "info"
-            "footer";
+            "footer"
+            "info";
     }
     .warframe .image {
         width: 100%;
