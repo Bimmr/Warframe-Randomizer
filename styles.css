@@ -220,10 +220,12 @@ body {
 .secondary-settings,
 .melee-settings {
     padding: 20px 10px;
-    display: grid;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-flow: column;
     overflow: hidden;
+    gap: 8px;
 }
+
 .settings-search{
     grid-area: 1
 }
@@ -252,13 +254,33 @@ body {
     flex-direction: column;
     gap: 8px;
     list-style: none;
-    margin-top: 15px;
     height: 100%;
 }
 .settings-list-item {
     padding: 10px 20px;
     display: flex;
     align-items: center;
+}
+.settings-content .tools{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: 0 10px;
+    overflow: visible;
+}
+.settings-content .tools .description{
+    font-size: 11px;
+    color: #aaa;
+    margin: 0;
+}
+.settings-content .tools button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    &:hover{
+        text-decoration: underline;
+    }
 }
 
 .warframe {
@@ -521,6 +543,9 @@ body {
 .form-item input[type="search"]:valid~label {
     top: -10px;
     font-size: 12px;
+}
+.form-item input[type="search"]::-webkit-search-cancel-button{
+    cursor: pointer;
 }
 
 

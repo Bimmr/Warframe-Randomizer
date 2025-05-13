@@ -82,10 +82,10 @@ let weaponData = []
     })
     
     // Populate the settings modal with the data lists
-    populateItemList(document.querySelector(".warframe-settings .settings-list"), warframeData, "warframe", "#warframe-search");
-    populateItemList(document.querySelector(".primary-settings .settings-list"), getWeaponsFromCategory("primary"), "primary", "#primary-search")
-    populateItemList(document.querySelector(".secondary-settings .settings-list"), getWeaponsFromCategory("secondary"), "secondary", "#secondary-search")
-    populateItemList(document.querySelector(".melee-settings .settings-list"), getWeaponsFromCategory("melee"), "melee", "#melee-search")
+    populateItemList("warframe", warframeData, "#warframe-search");
+    populateItemList("primary", getWeaponsFromCategory("primary"), "#primary-search")
+    populateItemList("secondary", getWeaponsFromCategory("secondary"), "#secondary-search")
+    populateItemList("melee", getWeaponsFromCategory("melee"), "#melee-search")
 
     
     // Randomize on page load
@@ -95,27 +95,28 @@ let weaponData = []
 
 /**
  * Populates a list with items and adds functionality for toggling item visibility
- * @param {HTMLElement} listElement - The DOM element to populate with items
+ * @param {string} category - Category name (warframe, primary, secondary, melee)
  * @param {Array} items - Array of items to populate the list with
- * @param {string} category - Category name (warframe, weapon)
  * @param {string} searchSelector - CSS selector for the search input
  */
-function populateItemList(listElement, items, category, searchSelector) {
+function populateItemList(category, items, searchSelector) {
     let lastCheckboxIndex = -1;
+    let settingsGroup = document.querySelector(`.${category}-settings`)
+    let listElement = settingsGroup.querySelector(".settings-list")
     
     // Clear the list first
     listElement.innerHTML = "";
     
+    // Create the toggles for each item
     items.forEach((item) => {
         const li = document.createElement("li");
         li.classList.add(`settings-list-item`);
         li.classList.add("card");
         li.classList.add("form-item");
-        li.innerHTML = `<input type="checkbox" id="${item.name}" ${item.hidden ? "" : "checked"}><label for="${
-            item.name
-        }">${item.name}</label>`;
+        li.innerHTML = `<input type="checkbox" id="${item.name}" ${item.hidden ? "" : "checked"}><label for="${item.name}">${item.name}</label>`;
         listElement.appendChild(li);
 
+        // Add event listener for the checkbox
         li.querySelector("input").addEventListener("click", function (e) {
             const checkbox = e.target;
             const itemName = checkbox.id;
@@ -158,7 +159,12 @@ function populateItemList(listElement, items, category, searchSelector) {
             }
 
             lastCheckboxIndex = Array.from(listElement.children).indexOf(li);
+
+            // Update the hidden items in localStorage
             updateHiddenItems(category, items);
+            
+            // Update the selected count
+            updateSelectedCount()
         });
     });
     
@@ -177,9 +183,53 @@ function populateItemList(listElement, items, category, searchSelector) {
                         item.style.display = "none";
                     }
                 });
+                // Update the selected count on page load
+                updateSelectedCount()
             });
         }
     }
+
+
+    // Add event listener for the "Toggle All" button
+    settingsGroup.querySelector(".toggle-all").addEventListener("click", function (e) {
+        e.preventDefault()
+        let checkboxes = listElement.querySelectorAll("input[type='checkbox']")
+        let searchedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.parentElement.style.display != "none")
+        let searchedChecked = Array.from(searchedCheckboxes).filter((checkbox) => checkbox.checked)
+    
+        const checkedCount = searchedChecked.length
+        const uncheckedCount = searchedCheckboxes.length - checkedCount
+        let majority = checkedCount > uncheckedCount
+
+        searchedCheckboxes.forEach((checkbox) => {
+            checkbox.checked = !majority
+        })
+        
+        // Update the hidden items in localStorage
+        updateHiddenItems(category, items);
+            
+        // Update the selected count on page load
+        updateSelectedCount()
+    })
+
+    /**
+    * Function to update the selected count
+    * This function counts the number of selected checkboxes and updates the description text
+    */
+    function updateSelectedCount(){
+        let checkboxes = listElement.querySelectorAll("input[type='checkbox']")
+        let selectedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked)
+        let searchedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.parentElement.style.display != "none")
+        let selectedSearchedCheckboxes = Array.from(searchedCheckboxes).filter((checkbox) => checkbox.checked)
+        const description = settingsGroup.querySelector(".description")
+        description.innerText = `${selectedSearchedCheckboxes.length} / ${searchedCheckboxes.length}`
+        if (checkboxes.length != searchedCheckboxes.length)
+            description.innerHTML += ` (${selectedCheckboxes.length}/${checkboxes.length})`
+            
+    }
+    
+    // Update the selected count on page load
+    updateSelectedCount()
 }
 
 /**
@@ -322,7 +372,8 @@ async function getWeaponData() {
                         (weapon.category == "Primary" ||
                             weapon.category == "Secondary" ||
                             weapon.category == "Melee") &&
-                        weapon.description != ""
+                        weapon.description != "" &&
+                        weapon.name.indexOf("Mk1") == -1
                         
                 )
                 // Map the data to the desired format
