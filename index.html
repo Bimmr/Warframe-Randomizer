@@ -20,69 +20,130 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
     <body>
         <div class="container">
-            <h1>Warframe Loadout Randomizer</h1>
-            <div class="warframe">
-                <img class="image skeleton" alt="" />
+            <div class="header">
+                <h1>Warframe Loadout Randomizer</h1>
+                <div class="settings-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+            <dialog id="settings-modal" class="settings-dialog">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <div class="modal-buttons">
+                         
+                        <button popovertarget="settings-help-tooltip" class="help-settings modal-button" id="settings-help"><i class="fas fa-question"></i></button>
+                        <button class="close-settings modal-button" autofocus><i class="fas fa-times"></i></button>
+
+                        <div popover id="settings-help-tooltip" anchor="settings-help" class="tooltip"> 
+                            <h2>Toggle if the item can be selected in the randomizer</h2>
+                            <p>- <strong>Click</strong> on the item to toggle its state</p>
+                            <p>- Holding <strong>CTRL + Click</strong> will adjust all the items to the new state</p>
+                            <p>- Holding <Strong>SHIFT + Click</Strong> will adjust all between the previously changed item and the one you clicked.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-content">
+                    <div class="warframe-settings">
+                        <div class="form-item settings-search">
+                            <input type="search" id="warframe-search" title="Search for warframes in the list" required />
+                            <label for="warframe-search">Search Warframes</label>
+                        </div>
+                        <ul class="settings-list">
+                            <!-- Warframe list will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="primary-settings">
+                        <div class="form-item settings-search">
+                            <input type="search" id="primary-search" title="Search for primary weapons in the list" required />
+                            <label for="primary-search">Search Primary Weapons</label>
+                        </div>
+                        <ul class="settings-list">
+                            <!-- Primary weapon list will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="secondary-settings">
+                        <div class="form-item settings-search">
+                            <input type="search" id="secondary-search" title="Search for secondary weapons in the list" required />
+                            <label for="secondary-search">Search Secondary Weapons</label>
+                        </div>
+                        <ul class="settings-list">
+                            <!-- Secondary weapon list will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                    <div class="melee-settings">
+                        <div class="form-item settings-search">
+                            <input type="search" id="melee-search" title="Search for melee weapons in the list" required />
+                            <label for="melee-search">Search Melee Weapons</label>
+                        </div>
+                        <ul class="settings-list">
+                            <!-- Melee weapon list will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </dialog>
+            <div class="warframe skeleton">
+                <img class="image" alt="" />
                 <div class="info">
                     <div class="details card">
-                        <h2 class="name skeleton"></h2>
-                        <p class="description skeleton"></p>
+                        <h2 class="name"></h2>
+                        <p class="description"></p>
                     </div>
                     <div class="abilities">
                         <div class="ability card">
-                            <img class="image skeleton" alt="" />
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <img class="image" alt="" />
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                         <div class="ability card">
-                            <img class="image skeleton" alt="" />
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <img class="image" alt="" />
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                         <div class="ability card">
-                            <img class="image skeleton" alt="" />
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <img class="image" alt="" />
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                         <div class="ability card">
-                            <img class="image skeleton" alt="" />
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <img class="image" alt="" />
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                     </div>
                 </div>
                 <a href="#" class="randomize" aria-label="Randomize Warframe">Randomize Warframe</a>
             </div>
             <div class="weapons">
-                <div class="primary">
-                    <img class="image skeleton" alt="" />
+                <div class="primary skeleton">
+                    <img class="image" alt="" />
                     <div class="info">
                         <div class="details card">
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                     </div>
                     <a href="#" class="randomize" aria-label="Randomize Primary">Randomize Primary</a>
                 </div>
-                <div class="secondary">
-                    <img class="image skeleton" alt="" />
+                <div class="secondary skeleton">
+                    <img class="image" alt="" />
                     <div class="info">
                         <div class="details card">
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                     </div>
                     <a href="#" class="randomize">Randomize Secondary</a>
                 </div>
-                <div class="melee">
-                    <img class="image skeleton" alt="" />
+                <div class="melee skeleton">
+                    <img class="image" alt="" />
                     <div class="info">
                         <div class="details card">
-                            <h2 class="name skeleton"></h2>
-                            <p class="description skeleton"></p>
+                            <h2 class="name"></h2>
+                            <p class="description"></p>
                         </div>
                     </div>
                     <a href="#" class="randomize" aria-label="Randomize Melee">Randomize Melee</a>

@@ -1,6 +1,8 @@
-:root{
+:root {
     --background: #2a2a2a;
     --text-color: #fff;
+    
+    --accent-color: #a64dff;
     --primary-color: #780bc0;
     --secondary-color: #5e0a9b;
 }
@@ -16,6 +18,9 @@ body {
     overflow-x: hidden;
     background: var(--background);
     color: var(--text-color);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) transparent;
 }
 
 /* Misc styles */
@@ -27,7 +32,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    &:hover{
+    &:hover {
         transform: scale(1.05);
         box-shadow: 0 0px 10px rgba(0, 0, 0, 0.2);
         background: rgba(111, 111, 111, 0.4);
@@ -47,11 +52,9 @@ body {
     -webkit-line-clamp: 8;
     line-clamp: 8;
     -webkit-box-orient: vertical;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary-color) var(--background);
 }
 
-.text-icon{
+.text-icon {
     vertical-align: middle;
     width: 12px;
     height: 12px;
@@ -63,14 +66,19 @@ body {
     margin-top: 20px;
     padding: 10px;
     background-color: var(--primary-color);
+    background-position: center;
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    transition: all 0.3s ease;
+    transition: all .3s ease;
+    &:hover {
+        background-color: var(--secondary-color);
+    }
+    &:active {
+        background-color: var(--primary-color);
+    }
 }
-.randomize:hover {
-    background-color: var(--secondary-color)
-}
+
 
 /* Section styles */
 
@@ -94,16 +102,167 @@ body {
     padding: 20px;
     max-height: calc(100vh - 40px);
     gap: 20px;
+    max-width: 2200px;
+    margin: 0 auto;
 }
 
-.container h1 {
+.container .header {
     grid-area: header;
     text-align: center;
     background: var(--secondary-color);
     margin: -20px;
     padding: 10px;
     margin-bottom: -1px;
-    
+    display: grid;
+    grid-template-columns: [title-start] 1fr [settings-start] auto [title-end settings-end];
+    align-items: center;
+}
+.container .header h1 {
+    grid-area: title;
+}
+
+/* Settings icon */
+.settings-icon {
+    grid-area: settings;
+    margin-right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s ease;
+    &:hover {
+        color: #fff;
+    }
+}
+
+/* Dialog modal styles */
+.settings-dialog {
+    width: clamp(300px, 80%, 800px);
+    height: clamp(300px, 80%, 1000px);
+    padding: 0;
+    background-color: #333;
+    border-radius: 8px;
+    border: 1px solid #444;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    color: #ddd;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    transition-behavior: allow-discrete;
+    opacity: 1;
+
+    @starting-style {
+        opacity: 0;
+    }
+}
+
+/* The style when closed */
+.settings-dialog:not([open]) {
+    opacity: 0;
+}
+
+/* Dialog backdrop */
+.settings-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #444;
+    background: var(--primary-color);
+}
+
+.settings-header h2 {
+    margin: 0;
+    color: #fff;
+}
+.modal-buttons{
+    position: relative;
+}
+
+.modal-button {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 18px;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+    }
+}
+.modal-button#settings-help{
+    margin-right: 20px;
+}
+.tooltip {
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0.9;
+    transform: translate(-50%, 5px);
+}
+
+.settings-content {
+    display: grid;
+    grid-template-areas: 
+        "warframe-settings primary-settings"
+        "warframe-settings secondary-settings"
+        "warframe-settings melee-settings";
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: calc(100% - 60px);
+    overflow: hidden;
+}
+
+.warframe-settings,
+.primary-settings,
+.secondary-settings,
+.melee-settings {
+    padding: 20px 10px;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+}
+.settings-search{
+    grid-area: 1
+}
+
+.warframe-settings {
+    grid-area: warframe-settings;
+    border-right: 1px solid #444;
+}
+.primary-settings {
+    grid-area: primary-settings;
+    border-bottom: 1px solid #444;
+}
+.secondary-settings {
+    grid-area: secondary-settings;
+    border-bottom: 1px solid #444;
+}
+.melee-settings {
+    grid-area: melee-settings;
+}
+
+.settings-list {
+    grid-area: 2;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    margin-top: 15px;
+    height: 100%;
+}
+.settings-list-item {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
 }
 
 .warframe {
@@ -112,7 +271,7 @@ body {
     grid-template-rows:
         [image-start info-start] 1fr
         [image-end info-end footer-start] auto;
-    grid-template-columns: [image-start footer-start] calc(512px * 0.85) [image-end info-start] auto [info-end footer-end] /* 512 is the width of the image */;
+    grid-template-columns: [image-start] calc(512px * 0.85) [image-end info-start footer-start] auto [info-end footer-end] /* 512 is the width of the image */;
     align-items: center;
 }
 .warframe .image {
@@ -135,6 +294,9 @@ body {
     justify-content: center;
     text-align: center;
     padding: 10px;
+    display: flex;
+    flex-flow: column;
+    min-height: 150px;
 }
 .warframe .abilities {
     display: grid;
@@ -183,13 +345,13 @@ body {
 .weapons .image {
     grid-area: image;
     width: 200px;
+    height: 200px;
 }
 
 .weapons .description {
     -webkit-line-clamp: 6;
     line-clamp: 6;
 }
-
 
 /* Responsive Classes */
 
@@ -226,19 +388,39 @@ body {
     .warframe .image {
         justify-self: center;
     }
-    .warframe .randomize{
+    .warframe .randomize {
         margin: 10px 0;
     }
-    .card{
+    .card {
         cursor: default;
     }
-    .card:hover{
+    .card:hover {
         transform: scale(1);
         box-shadow: 0 0px 2px rgba(255, 255, 255, 0.1);
         background: rgba(111, 111, 111, 0.3);
     }
 }
-@media (width <= 560px) {
+@media (width <= 680px) {
+    .container .header {
+        grid-template-columns: [title-start] 1fr [title-end settings-start] auto [settings-end];
+    }
+
+    .settings-content {
+        grid-template-areas: 
+            "warframe-settings"
+            "primary-settings"
+            "secondary-settings"
+            "melee-settings";
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+    }
+    .warframe-settings,
+    .primary-settings,
+    .secondary-settings{
+        border-right: none;
+        border-bottom: 1px solid #444;
+    }
+
     .weapons .primary,
     .weapons .secondary,
     .weapons .melee {
@@ -253,7 +435,7 @@ body {
         width: 100%;
         height: auto;
     }
-    .warframe .abilities{
+    .warframe .abilities {
         grid-template-columns: none;
         grid-template-rows: repeat(4, 1fr);
     }
@@ -261,7 +443,6 @@ body {
     .weapons .image {
         justify-self: center;
     }
-
 }
 
 /* Skeleton classes */
@@ -274,37 +455,33 @@ body {
         background-color: hsl(0, 0%, 35%);
     }
 }
-.skeleton {
+
+.skeleton :is(.image, .name, .description) {
     animation: skeleton 1s linear infinite alternate;
     color: transparent;
     opacity: 0.9;
 }
-.name.skeleton {
+.skeleton .name{ 
     min-height: 30px;
     border-radius: 1px;
 }
-.description.skeleton {
+.skeleton .description {
     min-height: 50px;
     border-radius: 1px;
     position: relative;
 }
-.warframe .image.skeleton {
-    width: 350px;
+.warframe.skeleton .image {
     mask-image: none;
 }
-.warframe .ability .image.skeleton {
-    width: 50px;
-    height: 50px;
-}
-.warframe .ability :is(.name, .description).skeleton {
+.warframe.skeleton  .ability :is(.name, .description){
     width: 100%;
 }
-.weapons .image.skeleton {
+.weapons.skeleton .image {
     width: 175px;
     height: 175px;
 }
-.description.skeleton::before,
-.description.skeleton::after {
+.skeleton .description::before,
+.skeleton .description::after {
     content: "";
     left: 0;
     right: 0;
@@ -312,9 +489,117 @@ body {
     background: #3f3f3f;
     position: absolute;
 }
-.description.skeleton::before {
+.skeleton .description::before {
     top: 33%;
 }
-.description.skeleton::after {
+.skeleton .description::after {
     top: 66%;
+}
+
+
+/* Form Styles */
+
+.form-item {
+    position: relative;
+    min-height: 20px;
+}
+
+.form-item label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    font-size: 14px;
+    transition: all 0.5s ease-in-out;
+    cursor: text;
+    color: #aaa;
+}
+
+.form-item input[type="search"]{
+}
+
+.form-item input[type="search"]:focus~label,
+.form-item input[type="search"]:valid~label {
+    top: -10px;
+    font-size: 12px;
+}
+
+
+.form-item input[type="text"],
+.form-item input[type="search"]{
+    min-width: 150px;
+    border: 1px solid #efefef;
+    outline: none;
+    background: rgba(255, 255, 255, 1);
+    width: 100%;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #111;
+}
+
+/* Checkbox styles */
+.form-item input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid #777;
+    width: 30px;
+    height: 18px;
+    position: relative;
+    top: -2px;
+    border-radius: 34px;
+    transition: all .35s;
+}
+
+.form-item input[type="checkbox"]:checked {
+    border: 1px solid var(--accent-color);
+}
+
+.form-item input[type="checkbox"]:focus {
+    outline: none;
+}
+
+.form-item input[type="checkbox"]::before {
+    content: ' ';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    opacity: 1;
+    transform: translateX(12px);
+    background: #aaa;
+    top: 2px;
+    left: 2px;
+    transition: transform .35s, opacity .5s;
+    transform-origin: center center;
+    border-radius: 50%;
+}
+
+.form-item input[type="checkbox"]:checked::before {
+    background: var(--accent-color);
+    transform: translateX(0);
+}
+
+.form-item input[type="checkbox"].checkbox-right {
+    left: calc(100% - 30px);
+}
+
+.form-item input[type="checkbox"].checkbox-right::before {
+    left: calc(100% - 26px);
+}
+
+.form-item input[type="checkbox"].checkbox-right~label {
+    left: 0;
+    top: 1px;
+}
+
+.form-item input[type="checkbox"]~label {
+    left: 60px;
+    top: 50%;
+    color: #efefef;
+    padding-bottom: 5px;
+}
+
+.form-item input[type="checkbox"]:hover,
+.form-item input[type="checkbox"]~label {
+    cursor: pointer;
 }
