@@ -136,7 +136,7 @@ body {
 
 /* Dialog modal styles */
 .settings-dialog {
-    width: clamp(300px, 100%, 800px);
+    width: clamp(300px, 100%, 1200px);
     height: clamp(300px, 80%, 1000px);
     padding: 0;
     background-color: #333;
@@ -209,12 +209,8 @@ body {
 
 .settings-content {
     display: grid;
-    grid-template-areas: 
-        "warframe-settings primary-settings"
-        "warframe-settings secondary-settings"
-        "warframe-settings melee-settings";
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: "warframe-settings primary-settings secondary-settings melee-settings";
+    grid-template-columns: repeat(4, 1fr);
     height: calc(100% - 60px);
     overflow: hidden;
 }
@@ -375,6 +371,14 @@ body {
         grid-template-rows: repeat(2, 1fr);
         gap: 10px;
     }
+    .settings-content{
+        grid-template-areas: 
+            "warframe-settings primary-settings"
+            "warframe-settings secondary-settings"
+            "warframe-settings melee-settings";
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
 }
 @media (width <= 1000px) {
     .warframe {
@@ -407,11 +411,9 @@ body {
 
     .settings-content {
         grid-template-areas: 
-            "warframe-settings"
-            "primary-settings"
-            "secondary-settings"
-            "melee-settings";
-        grid-template-columns: 1fr;
+            "warframe-settings primary-settings"
+            "secondary-settings melee-settings";
+        grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(4, auto);
     }
     .warframe-settings,
