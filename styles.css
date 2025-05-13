@@ -515,9 +515,6 @@ body {
     color: #aaa;
 }
 
-.form-item input[type="search"]{
-}
-
 .form-item input[type="search"]:focus~label,
 .form-item input[type="search"]:valid~label {
     top: -10px;
