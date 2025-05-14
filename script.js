@@ -161,7 +161,7 @@ function populateItemList(category, items, searchSelector) {
             lastCheckboxIndex = Array.from(listElement.children).indexOf(li);
 
             // Update the hidden items in localStorage
-            updateHiddenItems(category, items);
+            updateHiddenItems(items);
             
             // Update the selected count
             updateSelectedCount()
@@ -196,17 +196,25 @@ function populateItemList(category, items, searchSelector) {
         let checkboxes = listElement.querySelectorAll("input[type='checkbox']")
         let searchedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.parentElement.style.display != "none")
         let searchedChecked = Array.from(searchedCheckboxes).filter((checkbox) => checkbox.checked)
-    
+
         const checkedCount = searchedChecked.length
         const uncheckedCount = searchedCheckboxes.length - checkedCount
         let majority = checkedCount > uncheckedCount
 
+        // Update both the checkbox states and the item hidden properties
         searchedCheckboxes.forEach((checkbox) => {
             checkbox.checked = !majority
+            
+            // Get the corresponding item and update its hidden property
+            const itemName = checkbox.id;
+            const itemToUpdate = items.find((item) => item.name === itemName);
+            if (itemToUpdate) {
+                itemToUpdate.hidden = !(!majority); // hidden is inverse of checked
+            }
         })
         
         // Update the hidden items in localStorage
-        updateHiddenItems(category, items);
+        updateHiddenItems(items);
             
         // Update the selected count on page load
         updateSelectedCount()
@@ -228,26 +236,26 @@ function populateItemList(category, items, searchSelector) {
             
     }
     
+    /**
+     * Updates the hidden items list in localStorage
+     * @param {Array} items - Array of items to update hidden status for
+     */
+    function updateHiddenItems(items) {
+        if (category === 'warframe') {
+            // Handle warframes the same way as before
+            const hiddenItems = items.filter(item => item.hidden).map(item => item.name);
+            localStorage.setItem("hiddenWarframes", JSON.stringify(hiddenItems));
+        } else {
+            // For weapons, update the specific category in the hiddenWeapons object
+            const hiddenWeapons = JSON.parse(localStorage.getItem("hiddenWeapons")) || { primary: [], secondary: [], melee: [] };
+            hiddenWeapons[category] = items.filter(item => item.hidden).map(item => item.name);
+            localStorage.setItem("hiddenWeapons", JSON.stringify(hiddenWeapons));
+        }
+    }
+
+    
     // Update the selected count on page load
     updateSelectedCount()
-}
-
-/**
- * Updates the hidden items list in localStorage
- * @param {string} category - Category name (warframe, primary, secondary, melee)
- * @param {Array} items - Array of items to update hidden status for
- */
-function updateHiddenItems(category, items) {
-    if (category === 'warframe') {
-        // Handle warframes the same way as before
-        const hiddenItems = items.filter(item => item.hidden).map(item => item.name);
-        localStorage.setItem("hiddenWarframes", JSON.stringify(hiddenItems));
-    } else {
-        // For weapons, update the specific category in the hiddenWeapons object
-        const hiddenWeapons = JSON.parse(localStorage.getItem("hiddenWeapons")) || { primary: [], secondary: [], melee: [] };
-        hiddenWeapons[category] = items.filter(item => item.hidden).map(item => item.name);
-        localStorage.setItem("hiddenWeapons", JSON.stringify(hiddenWeapons));
-    }
 }
 
 
