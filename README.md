@@ -6,7 +6,7 @@ Warframe Randomizer is a tool designed to enhance your Warframe gameplay experie
 ## Features
 
 - Randomly selects Warframes, primary, secondary, and melee weapons
-- Optionally includes companions and gear
+- Limit the Warframes or weapons the randomizer can choose between
 - User-friendly interface
 - Great for solo or group challenges
 
