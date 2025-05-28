@@ -546,6 +546,4 @@ function randomizeWeapon(category) {
 
     // Remove skeleton class after data is loaded
     document.querySelector(`.${category}`).classList.remove("skeleton")
-
-    console.log(`Randomized ${category} weapon:`, randomWeapon)
 }
