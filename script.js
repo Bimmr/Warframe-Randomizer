@@ -369,6 +369,7 @@ async function getWeaponData() {
         "Prime",
         "Mk1-",
         "Coda",
+        "Dex",
         "Kuva",
         "Mutalist",
         "Prisma",
