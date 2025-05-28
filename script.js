@@ -1,3 +1,28 @@
+const WARFRAME_STAT_API_URL = "https://api.warframestat.us"
+const BROWSE_WF_BASE_URL = "https://browse.wf"
+const BROWSE_WF_ICONS_URL = `${BROWSE_WF_BASE_URL}/warframe-public-export-plus/ExportTextIcons.json`
+const IMAGE_BASE_URL = "https://cdn.warframestat.us/img"
+
+const weaponVariants = [
+        "Prime",
+        "Mk1-",
+        "Coda",
+        "Dex",
+        "Kuva",
+        "Mutalist",
+        "Prisma",
+        "Rakta",
+        "Sancti",
+        "Secura",
+        "Synoid",
+        "Telos",
+        "Tenet",
+        "Vandal",
+        "Vaykor",
+        "Wraith",
+    ]
+
+
 let textIcons = {}
 let warframeData = []
 let weaponData = []
@@ -263,7 +288,7 @@ function populateItemList(category, items, searchSelector) {
  * @returns {Promise<Object>} - A promise that resolves to an object containing text icons
  */
 async function getTextIcons() {
-    return fetch("https://browse.wf/warframe-public-export-plus/ExportTextIcons.json")
+    return fetch(BROWSE_WF_ICONS_URL)
         .then((response) => {
             if (!response.ok) throw new Error(`Failed to fetch text icons: ${response.status}`)
             return response.json()
@@ -275,7 +300,7 @@ async function getTextIcons() {
                     .filter(([key, value]) => value.DIT_AUTO)
                     .map(([key, value]) => {
                         const url = value.DIT_AUTO
-                        return [key, `https://browse.wf${url}`]
+                        return [key, `${BROWSE_WF_BASE_URL}${url}`]
                     })
             )
             return textIcons
@@ -293,25 +318,24 @@ async function getTextIcons() {
  */
 function replaceTextIcons(text) {
     return text.replace(/\<(.*?)\>/g, (match, p1) => {
-        const textIcon = textIcons[p1]
-
-        // Check if the text icon exists in the textIcons object
-        // If it does, replace it with the corresponding image
-        if (textIcon) {
-            return `<img src="${textIcon}" alt="${p1}" class="text-icon" />&nbsp;`
+        if (textIcons[p1]) {
+            return createIconImage(p1, textIcons[p1]);
+        } else if (match.endsWith("/>")) {
+            return match; // Keep HTML tags like <br/>
         } else {
-            // If it has a closing symbol (/>) at the end, return it as is (Some descriptions contain <br/> tags)
-            const hasClosingTag = match.endsWith("/>")
-            if (hasClosingTag) {
-                return match
-            }
-            // If it doesn't, return a custom HTML tag that closes. Example: <DT_POISION> will be replaced with <DT_POISION></DT_POISION>
-            else {
-                match = `<${p1}></${p1}>`
-                return match
-            }
+            return `<${p1}></${p1}>`; // Create custom HTML tag
         }
-    })
+    });
+}
+
+/**
+ * Creates an image element for the given icon name and URL
+ * @param {String} name - The name of the icon
+ * @param {String} iconUrl - The URL of the icon image
+ * @returns {String} - The HTML string for the image element
+ */
+function createIconImage(name, iconUrl) {
+    return `<img src="${iconUrl}" alt="${name}" class="text-icon" />&nbsp;`;
 }
 
 /**
@@ -320,7 +344,7 @@ function replaceTextIcons(text) {
  * */
 async function getWarframeData() {
     //return await fetch("https://api.warframestat.us/warframes/search/Caliban")
-    return await fetch("https://api.warframestat.us/warframes")
+    return await fetch(WARFRAME_STAT_API_URL + "/warframes")
         .then((response) => {
             if (!response.ok) throw new Error(`API error: ${response.status}`)
             return response.json()
@@ -333,12 +357,12 @@ async function getWarframeData() {
                 .map((warframe) => ({
                     name: warframe.name,
                     description: replaceTextIcons(warframe.description),
-                    image: "https://cdn.warframestat.us/img/" + warframe.imageName,
+                    image: `${IMAGE_BASE_URL}/${warframe.imageName}`,
                     hasPrime: warframe.isPrime,
                     abilities: warframe.abilities.map((ability) => ({
                         name: ability.name,
                         description: replaceTextIcons(ability.description),
-                        image: "https://cdn.warframestat.us/img/" + ability.imageName,
+                        image: `${IMAGE_BASE_URL}/${ability.imageName}`,
                     })),
                 }))
                 // Reduce the data to remove duplicates and keep the base version of the Warframe (But with the Prime image)
@@ -365,25 +389,8 @@ async function getWarframeData() {
  * @returns {Promise<Array>} - A promise that resolves to an array of weapon objects
  */
 async function getWeaponData() {
-    let weaponVariants = [
-        "Prime",
-        "Mk1-",
-        "Coda",
-        "Dex",
-        "Kuva",
-        "Mutalist",
-        "Prisma",
-        "Rakta",
-        "Sancti",
-        "Secura",
-        "Synoid",
-        "Telos",
-        "Tenet",
-        "Vandal",
-        "Vaykor",
-        "Wraith",
-    ]
-    return fetch("https://api.warframestat.us/weapons")
+    
+    return fetch(WARFRAME_STAT_API_URL + "/weapons")
         .then((response) => {
             if (!response.ok) throw new Error(`API error: ${response.status}`)
             return response.json()
@@ -406,7 +413,7 @@ async function getWeaponData() {
                     description: replaceTextIcons(weapon.description),
                     type: weapon.type,
                     category: weapon.category,
-                    image: "https://cdn.warframestat.us/img/" + weapon.imageName,
+                    image: `${IMAGE_BASE_URL}/${weapon.imageName}`,
                 }))
 
             // Group base weapons and their variants
