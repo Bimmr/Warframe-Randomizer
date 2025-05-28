@@ -4,20 +4,23 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
-        
-        <meta name="description" content="Generate random Warframe loadouts for your next mission">
-        <meta property="og:description" content="Generate random Warframe loadouts for your next mission">
-        <meta property="og:type" content="website">
+
+        <meta name="description" content="Generate random Warframe loadouts for your next mission" />
+        <meta property="og:description" content="Generate random Warframe loadouts for your next mission" />
+        <meta property="og:type" content="website" />
 
         <title>Warframe Loadout Randomizer</title>
-        <meta property="og:title" content="Warframe Loadout Randomizer">
+        <meta property="og:title" content="Warframe Loadout Randomizer" />
         <link rel="icon" type="image/png" href="favicon.png" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="styles.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     </head>
     <body>
         <div class="container">
@@ -31,22 +34,35 @@
                 <div class="settings-header">
                     <h2>Settings</h2>
                     <div class="modal-buttons">
-                         
-                        <button popovertarget="settings-help-tooltip" class="help-settings modal-button" id="settings-help"><i class="fas fa-question"></i></button>
+                        <button
+                            popovertarget="settings-help-tooltip"
+                            class="help-settings modal-button"
+                            id="settings-help"
+                        >
+                            <i class="fas fa-question"></i>
+                        </button>
                         <button class="close-settings modal-button" autofocus><i class="fas fa-times"></i></button>
 
-                        <div popover id="settings-help-tooltip" anchor="settings-help" class="tooltip"> 
+                        <div popover id="settings-help-tooltip" anchor="settings-help" class="tooltip">
                             <h2>Toggle if the item can be selected in the randomizer</h2>
                             <p>- <strong>Click</strong> on the item to toggle its state</p>
                             <p>- Holding <strong>CTRL + Click</strong> will adjust all the items to the new state</p>
-                            <p>- Holding <Strong>SHIFT + Click</Strong> will adjust all between the previously changed item and the one you clicked.</p>
+                            <p>
+                                - Holding <strong>SHIFT + Click</strong> will adjust all between the previously changed
+                                item and the one you clicked.
+                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="settings-content">
                     <div class="warframe-settings">
                         <div class="form-item settings-search">
-                            <input type="search" id="warframe-search" title="Search for warframes in the list" required />
+                            <input
+                                type="search"
+                                id="warframe-search"
+                                title="Search for warframes in the list"
+                                required
+                            />
                             <label for="warframe-search">Search Warframes</label>
                         </div>
                         <div class="tools">
@@ -59,7 +75,12 @@
                     </div>
                     <div class="primary-settings">
                         <div class="form-item settings-search">
-                            <input type="search" id="primary-search" title="Search for primary weapons in the list" required />
+                            <input
+                                type="search"
+                                id="primary-search"
+                                title="Search for primary weapons in the list"
+                                required
+                            />
                             <label for="primary-search">Search Primary Weapons</label>
                         </div>
                         <div class="tools">
@@ -72,7 +93,12 @@
                     </div>
                     <div class="secondary-settings">
                         <div class="form-item settings-search">
-                            <input type="search" id="secondary-search" title="Search for secondary weapons in the list" required />
+                            <input
+                                type="search"
+                                id="secondary-search"
+                                title="Search for secondary weapons in the list"
+                                required
+                            />
                             <label for="secondary-search">Search Secondary Weapons</label>
                         </div>
                         <div class="tools">
@@ -85,7 +111,12 @@
                     </div>
                     <div class="melee-settings">
                         <div class="form-item settings-search">
-                            <input type="search" id="melee-search" title="Search for melee weapons in the list" required />
+                            <input
+                                type="search"
+                                id="melee-search"
+                                title="Search for melee weapons in the list"
+                                required
+                            />
                             <label for="melee-search">Search Melee Weapons</label>
                         </div>
                         <div class="tools">
@@ -138,7 +169,7 @@
                             <h2 class="name"></h2>
                             <p class="description"></p>
                             <div class="variants">
-                                <div class="variant card" >
+                                <div class="variant card">
                                     <img class="image" alt="" />
                                 </div>
                                 <div class="variant">
@@ -146,7 +177,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     <a href="#" class="randomize" aria-label="Randomize Primary">Randomize Primary</a>
                 </div>
@@ -155,14 +185,13 @@
                     <div class="info">
                         <div class="details card">
                             <h2 class="name"></h2>
-                            <p class="description"></p> 
+                            <p class="description"></p>
                             <div class="variants">
                                 <div class="variation">
                                     <img class="image" alt="" />
                                 </div>
                             </div>
                         </div>
-                       
                     </div>
                     <a href="#" class="randomize">Randomize Secondary</a>
                 </div>
@@ -178,7 +207,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     <a href="#" class="randomize" aria-label="Randomize Melee">Randomize Melee</a>
                 </div>

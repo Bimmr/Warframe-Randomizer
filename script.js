@@ -408,37 +408,34 @@ async function getWeaponData() {
                     category: weapon.category,
                     image: "https://cdn.warframestat.us/img/" + weapon.imageName,
                 }))
-                
-                // Group base weapons and their variants
-                let weaponList = [...fetchedData]
 
-                // Map for quick lookup by name
-                const weaponMap = new Map(weaponList.map(w => [w.name, w]))
+            // Group base weapons and their variants
+            let weaponList = [...fetchedData]
 
-                // Process variants
-                weaponList = weaponList.filter(weapon => {
-                    let variantType = weaponVariants.find(variant => weapon.name.includes(variant))
-                    if (variantType) {
-                        
+            // Map for quick lookup by name
+            const weaponMap = new Map(weaponList.map((w) => [w.name, w]))
 
-                        // Get base weapon name by removing variant string
-                        const baseName = weapon.name.replace(new RegExp(`\\s*${variantType}\\s*`, "i"), "").trim()
-                        const baseWeapon = weaponMap.get(baseName)
-                        if (baseWeapon) {
-                            
-                            variantType = variantType === "Mk1-" ? "Mk1" : variantType // Normalize Mk1- to Mk1
-                            baseWeapon.variants = baseWeapon.variants || []
-                            baseWeapon.variants.push({
-                                name: weapon.name,
-                                image: weapon.image,
-                                description: weapon.description,
-                                variantType
-                            })
-                            return false 
-                        }
+            // Process variants
+            weaponList = weaponList.filter((weapon) => {
+                let variantType = weaponVariants.find((variant) => weapon.name.includes(variant))
+                if (variantType) {
+                    // Get base weapon name by removing variant string
+                    const baseName = weapon.name.replace(new RegExp(`\\s*${variantType}\\s*`, "i"), "").trim()
+                    const baseWeapon = weaponMap.get(baseName)
+                    if (baseWeapon) {
+                        variantType = variantType === "Mk1-" ? "Mk1" : variantType // Normalize Mk1- to Mk1
+                        baseWeapon.variants = baseWeapon.variants || []
+                        baseWeapon.variants.push({
+                            name: weapon.name,
+                            image: weapon.image,
+                            description: weapon.description,
+                            variantType,
+                        })
+                        return false
                     }
-                    return true 
-                })
+                }
+                return true
+            })
 
             console.log(weaponList)
             return Object.values(weaponList)
@@ -523,7 +520,6 @@ function randomizeWeapon(category) {
     document.querySelector(`.${category} .name`).innerHTML = randomWeapon.name
     document.querySelector(`.${category} .description`).innerHTML = randomWeapon.description
 
-
     // If the weapon has variants, display them
     const variantsContainer = document.querySelector(`.${category} .variants`)
     if (randomWeapon.variants && randomWeapon.variants.length > 0) {
@@ -539,7 +535,6 @@ function randomizeWeapon(category) {
                 <p class="name">${variant.variantType}</p>
             `
             variantsContainer.appendChild(variantElement)
-            
         })
     } else {
         variantsContainer.innerHTML = "" // Clear variants if none exist
