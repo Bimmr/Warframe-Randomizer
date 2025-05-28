@@ -220,8 +220,7 @@ body {
 .secondary-settings,
 .melee-settings {
     padding: 20px 10px;
-    display: flex;
-    flex-flow: column;
+    display: grid;
     overflow: hidden;
     gap: 8px;
 }
@@ -247,7 +246,6 @@ body {
 }
 
 .settings-list {
-    grid-area: 2;
     overflow: hidden;
     overflow-y: auto;
     display: flex;
