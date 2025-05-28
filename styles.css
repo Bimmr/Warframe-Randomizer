@@ -1,7 +1,7 @@
 :root {
     --background: #2a2a2a;
     --text-color: #fff;
-    
+
     --accent-color: #a64dff;
     --primary-color: #780bc0;
     --secondary-color: #5e0a9b;
@@ -12,7 +12,7 @@
     margin: 0;
 }
 html {
-     font-family: "Exo 2", sans-serif;
+    font-family: "Exo 2", sans-serif;
 }
 body {
     overflow-x: hidden;
@@ -70,7 +70,8 @@ body {
     color: white;
     text-decoration: none;
     border-radius: 5px;
-    transition: all .3s ease;
+    transition: all 0.3s ease;
+    align-self: center;
     &:hover {
         background-color: var(--secondary-color);
     }
@@ -78,7 +79,6 @@ body {
         background-color: var(--primary-color);
     }
 }
-
 
 /* Section styles */
 
@@ -180,7 +180,7 @@ body {
     margin: 0;
     color: #fff;
 }
-.modal-buttons{
+.modal-buttons {
     position: relative;
 }
 
@@ -194,7 +194,7 @@ body {
         color: #fff;
     }
 }
-.modal-button#settings-help{
+.modal-button#settings-help {
     margin-right: 20px;
 }
 .tooltip {
@@ -226,8 +226,8 @@ body {
     gap: 8px;
 }
 
-.settings-search{
-    grid-area: 1
+.settings-search {
+    grid-area: 1;
 }
 
 .warframe-settings {
@@ -261,24 +261,24 @@ body {
     display: flex;
     align-items: center;
 }
-.settings-content .tools{
+.settings-content .tools {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
     margin: 0 10px;
     overflow: visible;
 }
-.settings-content .tools .description{
+.settings-content .tools .description {
     font-size: 11px;
     color: #aaa;
     margin: 0;
 }
-.settings-content .tools button{
+.settings-content .tools button {
     background: none;
     border: none;
     cursor: pointer;
     margin-right: 5px;
-    &:hover{
+    &:hover {
         text-decoration: underline;
     }
 }
@@ -291,6 +291,8 @@ body {
         [image-end info-end footer-start] auto;
     grid-template-columns: [image-start] calc(512px * 0.85) [image-end info-start footer-start] auto [info-end footer-end] /* 512 is the width of the image */;
     align-items: center;
+    
+    height: calc(100vh - 58px - 20px - 10px ); /* 58px for header, 20px for container gap, 10px padding */
 }
 .warframe .image {
     grid-area: image;
@@ -349,6 +351,7 @@ body {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     gap: 10px;
+    height: calc(100vh - 58px - 20px); /* 58px for header, 20px for container gap*/
 }
 
 .weapons .primary,
@@ -370,9 +373,32 @@ body {
     -webkit-line-clamp: 6;
     line-clamp: 6;
 }
+.weapons .variants {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 10px;
+}
+.weapons .variants .variant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-shadow: 0 0px 5px rgb(255 255 255 / 10%);
+    border-radius: 5px;
+}
+.weapons .variants .image{
+    width: 50px;
+    height: 50px;
+    margin: 0px 5px;
+}
+.weapons .variants .name {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 5px;
+}
 
 /* Responsive Classes */
-
 @media (width <=1500px) {
     .container {
         grid-template-areas:
@@ -381,6 +407,10 @@ body {
             "weapons";
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
+    }
+    .warframe,
+    .weapons {
+        height: unset;
     }
     .weapons {
         grid-template-columns: repeat(3, 1fr);
@@ -393,8 +423,8 @@ body {
         grid-template-rows: repeat(2, 1fr);
         gap: 10px;
     }
-    .settings-content{
-        grid-template-areas: 
+    .settings-content {
+        grid-template-areas:
             "warframe-settings primary-settings"
             "warframe-settings secondary-settings"
             "warframe-settings melee-settings";
@@ -432,7 +462,7 @@ body {
     }
 
     .settings-content {
-        grid-template-areas: 
+        grid-template-areas:
             "warframe-settings primary-settings"
             "secondary-settings melee-settings";
         grid-template-columns: repeat(2, 1fr);
@@ -440,7 +470,7 @@ body {
     }
     .warframe-settings,
     .primary-settings,
-    .secondary-settings{
+    .secondary-settings {
         border-right: none;
         border-bottom: 1px solid #444;
     }
@@ -485,7 +515,7 @@ body {
     color: transparent;
     opacity: 0.9;
 }
-.skeleton .name{ 
+.skeleton .name {
     min-height: 30px;
     border-radius: 1px;
 }
@@ -497,7 +527,7 @@ body {
 .warframe.skeleton .image {
     mask-image: none;
 }
-.warframe.skeleton  .ability :is(.name, .description){
+.warframe.skeleton .ability :is(.name, .description) {
     width: 100%;
 }
 .weapons.skeleton .image {
@@ -520,7 +550,6 @@ body {
     top: 66%;
 }
 
-
 /* Form Styles */
 
 .form-item {
@@ -539,18 +568,17 @@ body {
     color: #aaa;
 }
 
-.form-item input[type="search"]:focus~label,
-.form-item input[type="search"]:valid~label {
+.form-item input[type="search"]:focus ~ label,
+.form-item input[type="search"]:valid ~ label {
     top: -10px;
     font-size: 12px;
 }
-.form-item input[type="search"]::-webkit-search-cancel-button{
+.form-item input[type="search"]::-webkit-search-cancel-button {
     cursor: pointer;
 }
 
-
 .form-item input[type="text"],
-.form-item input[type="search"]{
+.form-item input[type="search"] {
     min-width: 150px;
     border: 1px solid #efefef;
     outline: none;
@@ -572,7 +600,7 @@ body {
     position: relative;
     top: -2px;
     border-radius: 34px;
-    transition: all .35s;
+    transition: all 0.35s;
 }
 
 .form-item input[type="checkbox"]:checked {
@@ -584,7 +612,7 @@ body {
 }
 
 .form-item input[type="checkbox"]::before {
-    content: ' ';
+    content: " ";
     position: absolute;
     width: 12px;
     height: 12px;
@@ -593,7 +621,7 @@ body {
     background: #aaa;
     top: 2px;
     left: 2px;
-    transition: transform .35s, opacity .5s;
+    transition: transform 0.35s, opacity 0.5s;
     transform-origin: center center;
     border-radius: 50%;
 }
@@ -611,12 +639,12 @@ body {
     left: calc(100% - 26px);
 }
 
-.form-item input[type="checkbox"].checkbox-right~label {
+.form-item input[type="checkbox"].checkbox-right ~ label {
     left: 0;
     top: 1px;
 }
 
-.form-item input[type="checkbox"]~label {
+.form-item input[type="checkbox"] ~ label {
     left: 60px;
     top: 50%;
     color: #efefef;
@@ -624,6 +652,6 @@ body {
 }
 
 .form-item input[type="checkbox"]:hover,
-.form-item input[type="checkbox"]~label {
+.form-item input[type="checkbox"] ~ label {
     cursor: pointer;
 }

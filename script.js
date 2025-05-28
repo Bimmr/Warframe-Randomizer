@@ -3,7 +3,6 @@ let warframeData = []
 let weaponData = []
 
 ;(async function () {
-
     // Add event listeners to the randomize buttons
     document.querySelectorAll(".randomize").forEach((e) =>
         e.addEventListener("click", function (e) {
@@ -50,15 +49,11 @@ let weaponData = []
         settingsHelpTooltip.style.top = `${rect.bottom + window.scrollY}px`
     })
 
-
     // Fetch the text icons
     textIcons = await getTextIcons()
 
     // Fetch the data
-    const [wfData, wData] = await Promise.all([
-        getWarframeData(),
-        getWeaponData()
-    ])
+    const [wfData, wData] = await Promise.all([getWarframeData(), getWeaponData()])
 
     // Store fetched data in global variables
     warframeData = wfData
@@ -71,7 +66,7 @@ let weaponData = []
             warframe.hidden = true
         }
     })
-    
+
     // Load all hidden weapons from a single object in localStorage
     const hiddenWeapons = JSON.parse(localStorage.getItem("hiddenWeapons")) || { primary: [], secondary: [], melee: [] }
     weaponData.forEach((weapon) => {
@@ -80,17 +75,15 @@ let weaponData = []
             weapon.hidden = true
         }
     })
-    
+
     // Populate the settings modal with the data lists
-    populateItemList("warframe", warframeData, "#warframe-search");
+    populateItemList("warframe", warframeData, "#warframe-search")
     populateItemList("primary", getWeaponsFromCategory("primary"), "#primary-search")
     populateItemList("secondary", getWeaponsFromCategory("secondary"), "#secondary-search")
     populateItemList("melee", getWeaponsFromCategory("melee"), "#melee-search")
 
-    
     // Randomize on page load
     document.querySelectorAll(".randomize").forEach((e) => e.click())
-
 })()
 
 /**
@@ -100,101 +93,104 @@ let weaponData = []
  * @param {string} searchSelector - CSS selector for the search input
  */
 function populateItemList(category, items, searchSelector) {
-    let lastCheckboxIndex = -1;
+    let lastCheckboxIndex = -1
     let settingsGroup = document.querySelector(`.${category}-settings`)
     let listElement = settingsGroup.querySelector(".settings-list")
-    
+
     // Clear the list first
-    listElement.innerHTML = "";
-    
+    listElement.innerHTML = ""
+
     // Create the toggles for each item
     items.forEach((item) => {
-        const li = document.createElement("li");
-        li.classList.add(`settings-list-item`);
-        li.classList.add("card");
-        li.classList.add("form-item");
-        li.innerHTML = `<input type="checkbox" id="${item.name}" ${item.hidden ? "" : "checked"}><label for="${item.name}">${item.name}</label>`;
-        listElement.appendChild(li);
+        const li = document.createElement("li")
+        li.classList.add(`settings-list-item`)
+        li.classList.add("card")
+        li.classList.add("form-item")
+        li.innerHTML = `<input type="checkbox" id="${item.name}" ${item.hidden ? "" : "checked"}><label for="${
+            item.name
+        }">${item.name}</label>`
+        listElement.appendChild(li)
 
         // Add event listener for the checkbox
         li.querySelector("input").addEventListener("click", function (e) {
-            const checkbox = e.target;
-            const itemName = checkbox.id;
-            const isChecked = checkbox.checked;
+            const checkbox = e.target
+            const itemName = checkbox.id
+            const isChecked = checkbox.checked
 
             // Update the hidden property of the item
-            const itemToUpdate = items.find((i) => i.name === itemName);
+            const itemToUpdate = items.find((i) => i.name === itemName)
             if (itemToUpdate) {
-                itemToUpdate.hidden = !isChecked;
+                itemToUpdate.hidden = !isChecked
             }
 
             // If shift is held, check all checkboxes between the last checkbox and the current one
             if (e.shiftKey && lastCheckboxIndex !== -1) {
-                const checkboxes = listElement.querySelectorAll("input[type='checkbox']");
-                const currentCheckboxIndex = Array.from(checkboxes).indexOf(checkbox);
-                const start = Math.min(lastCheckboxIndex, currentCheckboxIndex);
-                const end = Math.max(lastCheckboxIndex, currentCheckboxIndex);
+                const checkboxes = listElement.querySelectorAll("input[type='checkbox']")
+                const currentCheckboxIndex = Array.from(checkboxes).indexOf(checkbox)
+                const start = Math.min(lastCheckboxIndex, currentCheckboxIndex)
+                const end = Math.max(lastCheckboxIndex, currentCheckboxIndex)
                 for (let i = start; i <= end; i++) {
-                    checkboxes[i].checked = isChecked;
+                    checkboxes[i].checked = isChecked
                     // Update the hidden property for these items too
-                    const itemName = checkboxes[i].id;
-                    const itemToUpdate = items.find((i) => i.name === itemName);
+                    const itemName = checkboxes[i].id
+                    const itemToUpdate = items.find((i) => i.name === itemName)
                     if (itemToUpdate) {
-                        itemToUpdate.hidden = !isChecked;
+                        itemToUpdate.hidden = !isChecked
                     }
                 }
             }
-            
+
             // If ctrl is held, make all checkboxes match the current checkbox
             if (e.ctrlKey) {
                 listElement.querySelectorAll("input[type='checkbox']").forEach((cb) => {
-                    cb.checked = isChecked;
+                    cb.checked = isChecked
                     // Update the hidden property for all items
-                    const itemName = cb.id;
-                    const itemToUpdate = items.find((i) => i.name === itemName);
+                    const itemName = cb.id
+                    const itemToUpdate = items.find((i) => i.name === itemName)
                     if (itemToUpdate) {
-                        itemToUpdate.hidden = !isChecked;
+                        itemToUpdate.hidden = !isChecked
                     }
-                });
+                })
             }
 
-            lastCheckboxIndex = Array.from(listElement.children).indexOf(li);
+            lastCheckboxIndex = Array.from(listElement.children).indexOf(li)
 
             // Update the hidden items in localStorage
-            updateHiddenItems(items);
-            
+            updateHiddenItems(items)
+
             // Update the selected count
             updateSelectedCount()
-        });
-    });
-    
+        })
+    })
+
     // Set up search functionality
     if (searchSelector) {
-        const searchInput = document.querySelector(searchSelector);
+        const searchInput = document.querySelector(searchSelector)
         if (searchInput) {
             searchInput.addEventListener("input", function (e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const listItems = listElement.querySelectorAll(`li`);
+                const searchTerm = e.target.value.toLowerCase()
+                const listItems = listElement.querySelectorAll(`li`)
                 listItems.forEach((item) => {
-                    const label = item.querySelector("label").innerText.toLowerCase();
+                    const label = item.querySelector("label").innerText.toLowerCase()
                     if (label.includes(searchTerm)) {
-                        item.style.display = "block";
+                        item.style.display = "block"
                     } else {
-                        item.style.display = "none";
+                        item.style.display = "none"
                     }
-                });
+                })
                 // Update the selected count on page load
                 updateSelectedCount()
-            });
+            })
         }
     }
-
 
     // Add event listener for the "Toggle All" button
     settingsGroup.querySelector(".toggle-all").addEventListener("click", function (e) {
         e.preventDefault()
         let checkboxes = listElement.querySelectorAll("input[type='checkbox']")
-        let searchedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.parentElement.style.display != "none")
+        let searchedCheckboxes = Array.from(checkboxes).filter(
+            (checkbox) => checkbox.parentElement.style.display != "none"
+        )
         let searchedChecked = Array.from(searchedCheckboxes).filter((checkbox) => checkbox.checked)
 
         const checkedCount = searchedChecked.length
@@ -204,60 +200,63 @@ function populateItemList(category, items, searchSelector) {
         // Update both the checkbox states and the item hidden properties
         searchedCheckboxes.forEach((checkbox) => {
             checkbox.checked = !majority
-            
+
             // Get the corresponding item and update its hidden property
-            const itemName = checkbox.id;
-            const itemToUpdate = items.find((item) => item.name === itemName);
+            const itemName = checkbox.id
+            const itemToUpdate = items.find((item) => item.name === itemName)
             if (itemToUpdate) {
-                itemToUpdate.hidden = !(!majority); // hidden is inverse of checked
+                itemToUpdate.hidden = !!majority // hidden is inverse of checked
             }
         })
-        
+
         // Update the hidden items in localStorage
-        updateHiddenItems(items);
-            
+        updateHiddenItems(items)
+
         // Update the selected count on page load
         updateSelectedCount()
     })
 
     /**
-    * Function to update the selected count
-    * This function counts the number of selected checkboxes and updates the description text
-    */
-    function updateSelectedCount(){
+     * Function to update the selected count
+     * This function counts the number of selected checkboxes and updates the description text
+     */
+    function updateSelectedCount() {
         let checkboxes = listElement.querySelectorAll("input[type='checkbox']")
         let selectedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.checked)
-        let searchedCheckboxes = Array.from(checkboxes).filter((checkbox) => checkbox.parentElement.style.display != "none")
+        let searchedCheckboxes = Array.from(checkboxes).filter(
+            (checkbox) => checkbox.parentElement.style.display != "none"
+        )
         let selectedSearchedCheckboxes = Array.from(searchedCheckboxes).filter((checkbox) => checkbox.checked)
         const description = settingsGroup.querySelector(".description")
         description.innerText = `${selectedSearchedCheckboxes.length} / ${searchedCheckboxes.length}`
         if (checkboxes.length != searchedCheckboxes.length)
             description.innerHTML += ` (${selectedCheckboxes.length}/${checkboxes.length})`
-            
     }
-    
+
     /**
      * Updates the hidden items list in localStorage
      * @param {Array} items - Array of items to update hidden status for
      */
     function updateHiddenItems(items) {
-        if (category === 'warframe') {
+        if (category === "warframe") {
             // Handle warframes the same way as before
-            const hiddenItems = items.filter(item => item.hidden).map(item => item.name);
-            localStorage.setItem("hiddenWarframes", JSON.stringify(hiddenItems));
+            const hiddenItems = items.filter((item) => item.hidden).map((item) => item.name)
+            localStorage.setItem("hiddenWarframes", JSON.stringify(hiddenItems))
         } else {
             // For weapons, update the specific category in the hiddenWeapons object
-            const hiddenWeapons = JSON.parse(localStorage.getItem("hiddenWeapons")) || { primary: [], secondary: [], melee: [] };
-            hiddenWeapons[category] = items.filter(item => item.hidden).map(item => item.name);
-            localStorage.setItem("hiddenWeapons", JSON.stringify(hiddenWeapons));
+            const hiddenWeapons = JSON.parse(localStorage.getItem("hiddenWeapons")) || {
+                primary: [],
+                secondary: [],
+                melee: [],
+            }
+            hiddenWeapons[category] = items.filter((item) => item.hidden).map((item) => item.name)
+            localStorage.setItem("hiddenWeapons", JSON.stringify(hiddenWeapons))
         }
     }
 
-    
     // Update the selected count on page load
     updateSelectedCount()
 }
-
 
 /**
  * Fetches text icons from the browse.wf public export
@@ -289,7 +288,7 @@ async function getTextIcons() {
 
 /**
  * Replaces text icons in the given text with their corresponding image URLs
- * @param {String} text 
+ * @param {String} text
  * @returns {String} - The text with placeholders replaced with image elements
  */
 function replaceTextIcons(text) {
@@ -366,6 +365,23 @@ async function getWarframeData() {
  * @returns {Promise<Array>} - A promise that resolves to an array of weapon objects
  */
 async function getWeaponData() {
+    let weaponVariants = [
+        "Prime",
+        "Mk1-",
+        "Coda",
+        "Kuva",
+        "Mutalist",
+        "Prisma",
+        "Rakta",
+        "Sancti",
+        "Secura",
+        "Synoid",
+        "Telos",
+        "Tenet",
+        "Vandal",
+        "Vaykor",
+        "Wraith",
+    ]
     return fetch("https://api.warframestat.us/weapons")
         .then((response) => {
             if (!response.ok) throw new Error(`API error: ${response.status}`)
@@ -380,9 +396,7 @@ async function getWeaponData() {
                         (weapon.category == "Primary" ||
                             weapon.category == "Secondary" ||
                             weapon.category == "Melee") &&
-                        weapon.description != "" &&
-                        weapon.name.indexOf("Mk1") == -1
-                        
+                        weapon.description != ""
                 )
                 // Map the data to the desired format
                 .map((weapon) => ({
@@ -391,21 +405,41 @@ async function getWeaponData() {
                     type: weapon.type,
                     category: weapon.category,
                     image: "https://cdn.warframestat.us/img/" + weapon.imageName,
-                    hasPrime: weapon.isPrime,
                 }))
-                // Reduce the data to remove duplicates and keep the base version of the weapon (But with the Prime image)
-                .reduce((acc, weapon) => {
-                    const baseName = weapon.name.replace(" Prime", "")
-                    if (!acc[baseName]) {
-                        acc[baseName] = weapon
-                    } else if (weapon.hasPrime) {
-                        acc[baseName].image = weapon.image
-                        acc[baseName].hasPrime = true
-                    }
-                    return acc
-                }, {})
+                
+                // Group base weapons and their variants
+                let weaponList = [...fetchedData]
 
-            return Object.values(fetchedData)
+                // Map for quick lookup by name
+                const weaponMap = new Map(weaponList.map(w => [w.name, w]))
+
+                // Process variants
+                weaponList = weaponList.filter(weapon => {
+                    let variantType = weaponVariants.find(variant => weapon.name.includes(variant))
+                    if (variantType) {
+                        
+
+                        // Get base weapon name by removing variant string
+                        const baseName = weapon.name.replace(new RegExp(`\\s*${variantType}\\s*`, "i"), "").trim()
+                        const baseWeapon = weaponMap.get(baseName)
+                        if (baseWeapon) {
+                            
+                            variantType = variantType === "Mk1-" ? "Mk1" : variantType // Normalize Mk1- to Mk1
+                            baseWeapon.variants = baseWeapon.variants || []
+                            baseWeapon.variants.push({
+                                name: weapon.name,
+                                image: weapon.image,
+                                description: weapon.description,
+                                variantType
+                            })
+                            return false 
+                        }
+                    }
+                    return true 
+                })
+
+            console.log(weaponList)
+            return Object.values(weaponList)
         })
         .catch((error) => {
             console.error("Failed to fetch weapon data:", error)
@@ -454,7 +488,7 @@ function randomizeWarframe() {
         abilities[index].querySelector(".name").innerHTML = ability.name
         abilities[index].querySelector(".description").innerHTML = ability.description
     })
-    
+
     // Remove skeleton class after data is loaded
     document.querySelector(".warframe").classList.remove("skeleton")
 }
@@ -486,7 +520,31 @@ function randomizeWeapon(category) {
     document.querySelector(`.${category} .image`).alt = randomWeapon.name
     document.querySelector(`.${category} .name`).innerHTML = randomWeapon.name
     document.querySelector(`.${category} .description`).innerHTML = randomWeapon.description
-    
+
+
+    // If the weapon has variants, display them
+    const variantsContainer = document.querySelector(`.${category} .variants`)
+    if (randomWeapon.variants && randomWeapon.variants.length > 0) {
+        variantsContainer.innerHTML = "" // Clear previous variants
+        randomWeapon.variants.forEach((variant, i) => {
+            const variantElement = document.createElement("div")
+            variantElement.classList.add("variant")
+            // variantElement.classList.add("card")
+            variantElement.title = variant.description
+            variantElement.id = `${category}-variant-card-${i}`
+            variantElement.innerHTML = `
+                <img src="${variant.image}" alt="${variant.name}" class="image" />
+                <p class="name">${variant.variantType}</p>
+            `
+            variantsContainer.appendChild(variantElement)
+            
+        })
+    } else {
+        variantsContainer.innerHTML = "" // Clear variants if none exist
+    }
+
     // Remove skeleton class after data is loaded
     document.querySelector(`.${category}`).classList.remove("skeleton")
+
+    console.log(`Randomized ${category} weapon:`, randomWeapon)
 }
