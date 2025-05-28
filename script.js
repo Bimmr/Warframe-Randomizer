@@ -397,7 +397,8 @@ async function getWeaponData() {
                         (weapon.category == "Primary" ||
                             weapon.category == "Secondary" ||
                             weapon.category == "Melee") &&
-                        weapon.description != ""
+                        weapon.description != "" &&
+                        weapon.uniqueName.indexOf("Doppelganger") === -1 // Exlude Doppelganger weapons (Currently only found the Grimoire)
                 )
                 // Map the data to the desired format
                 .map((weapon) => ({
