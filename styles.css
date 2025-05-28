@@ -373,6 +373,10 @@ body {
     -webkit-line-clamp: 6;
     line-clamp: 6;
 }
+.weapons .info:has(.variants) .description {
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+}
 .weapons .variants {
     display: flex;
     flex-flow: row nowrap;
