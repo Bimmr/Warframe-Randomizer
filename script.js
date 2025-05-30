@@ -473,6 +473,10 @@ function randomizeWarframe() {
         document.querySelector(".warframe").classList.add("skeleton")
         document.querySelectorAll(".warframe .image").forEach((img) => {
             img.removeAttribute("src")
+            img.removeAttribute("alt")
+        })
+        document.querySelectorAll(".warframe .name, .warframe .description").forEach((el) => {
+            el.innerHTML = ""
         })
         return
     }
@@ -515,6 +519,9 @@ function randomizeWeapon(category) {
         alert(`Not enough ${category} weapons available. Please check your settings.`)
         document.querySelector(`.${category}`).classList.add("skeleton")
         document.querySelector(`.${category} .image`).removeAttribute("src")
+        document.querySelector(`.${category} .name`).innerHTML = ""
+        document.querySelector(`.${category} .description`).innerHTML = ""
+        document.querySelector(`.${category} .variants`).innerHTML = "" // Clear variants
         return
     }
 
