@@ -75,6 +75,8 @@ let weaponData = []
     })
 
     document.querySelector("#settings-import").addEventListener("click", function(){
+        const importConfirmation = confirm("This will overwrite your current hide settings.\n\nSelect your lastData.dat file from the AlecaFrame app's folder.\nYou can find it in the \"%localappdata%/AlecaFrame\" folder.")
+        if(importConfirmation == false) return
         const input = document.querySelector("#settings-import-input")
         input.click()
     })
