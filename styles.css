@@ -442,6 +442,7 @@ body {
             "image"
             "footer"
             "info";
+        max-height: unset;
     }
     .warframe .image {
         justify-self: center;
