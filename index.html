@@ -34,16 +34,28 @@
                 <div class="settings-header">
                     <h2>Settings</h2>
                     <div class="modal-buttons">
+                        <button id="settings-import" class="modal-button" title="Import from Inventory file.">
+                            <i class="fas fa-file-import"></i>
+                        </button>
+
                         <button
                             popovertarget="settings-help-tooltip"
                             class="help-settings modal-button"
                             id="settings-help"
+                            title="Help with Settings"
                         >
                             <i class="fas fa-question"></i>
                         </button>
-                        <button class="close-settings modal-button" autofocus><i class="fas fa-times"></i></button>
+                        <button class="close-settings modal-button" title="Close Settings" autofocus>
+                            <i class="fas fa-times"></i>
+                        </button>
 
+                        <input type="file" id="settings-import-input" accept=".dat" />
                         <div popover id="settings-help-tooltip" anchor="settings-help" class="tooltip">
+                            <h2>Importing Inventory</h2>
+                            <p>You can import your inventory from the AlecaFrame app using the <strong>import button</strong>.</p>
+                            <p>If you use AlecaFrame, you can find this in the <strong>%localappdata%/AlecaFrame</strong> folder.</p>
+                            <br><br>
                             <h2>Toggle if the item can be selected in the randomizer</h2>
                             <p>- <strong>Click</strong> on the item to toggle its state</p>
                             <p>- Holding <strong>CTRL + Click</strong> will adjust all the items to the new state</p>
@@ -213,5 +225,82 @@
             </div>
         </div>
         <script src="script.js"></script>
+
+        <script src="https://pluto-lang.org/wasm-builds/out/libpluto/0.9.5/libpluto.js"></script>
+        <script src="https://pluto-lang.org/PlutoScript/plutoscript.js"></script>
+        <script>
+            function get_uploaded() {
+                return new Promise((resolve, reject) => {
+                    if (document.querySelector("#settings-import-input").files.length) {
+                        document
+                            .querySelector("#settings-import-input")
+                            .files[0].arrayBuffer()
+                            .then((ab) => {
+                                pluto_give_file("lastData.dat", new Uint8Array(ab))
+                                resolve(true)
+                            })
+                    } else {
+                        resolve(false)
+                    }
+                })
+            }
+            function onInventoryUploaded(inventory) {
+                inventory = JSON.parse(inventory)
+
+                // Get weapons
+                const primaryWeapons = inventory.LongGuns.map((weapon) => weapon.ItemType)
+                const secondaryWeapons = inventory.Pistols.map((weapon) => weapon.ItemType)
+                const meleeWeapons = inventory.Melee.map((weapon) => weapon.ItemType)
+                const weapons = [...primaryWeapons, ...secondaryWeapons, ...meleeWeapons]
+
+                // Get warframes
+                const warframes = inventory.Suits.map((suit) => suit.ItemType)
+                
+                // Hide everything first
+                weaponData.forEach((weapon) => weapon.hidden = true)
+                warframeData.forEach((warframe) => warframe.hidden = true)
+
+                // Unhide the weapons and warframes that are in the inventory
+                weapons.forEach((uniqueName) => {
+                    const weapon = weaponData.find((w) => w.uniqueName === uniqueName || (w.variants && w.variants.some(v => v.uniqueName === uniqueName)))
+                    if (weapon) {
+                        weapon.hidden = false
+                        console.log(`Unhiding weapon: ${weapon.name} (${weapon.uniqueName})`)
+                    }
+                })
+                // Unhide the warframes that are in the inventory
+                console.log(warframeData)
+                warframes.forEach((uniqueName) => {
+                    const warframe = warframeData.find((w) => w.uniqueName === uniqueName || w.primeUniqueName === uniqueName || w.umbraUniqueName === uniqueName)
+                    if (warframe) {
+                        warframe.hidden = false
+                        console.log(`Unhiding warframe: ${warframe.name} (${warframe.uniqueName})`)
+                    }else {
+                        console.warn(`Warframe not found: ${uniqueName}`)
+                    }
+                })
+
+                populateItemList("warframe", warframeData, "#warframe-search")
+                populateItemList("primary", getWeaponsFromCategory("primary"), "#primary-search")
+                populateItemList("secondary", getWeaponsFromCategory("secondary"), "#secondary-search")
+                populateItemList("melee", getWeaponsFromCategory("melee"), "#melee-search")
+            }
+        </script>
+        <script type="pluto">
+            local { crypto, json } = require "*"
+            document.querySelector("#settings-import-input"):addEventListener("change", function()
+                if js_invoke("get_uploaded") then
+                    local key <const> = "LEO-ALEC\tEO-ALEC"
+                    local iv <const> = "\49\50\70\71\66\51\54\45\76\69\51\45\113\61\57\0"
+                    local data = io.contents("lastData.dat")
+                                |> crypto.decrypt|"aes-cbc-pkcs7", key, iv|
+                                |> json.decode|json.withnull + json.withorder|
+                    if data.InventoryJson then
+                        data = json.decode(data.InventoryJson, json.withnull + json.withorder)
+                    end
+                    js_invoke("onInventoryUploaded", json.encode(data))
+                end
+            end)
+        </script>
     </body>
 </html>

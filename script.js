@@ -74,6 +74,12 @@ let weaponData = []
         settingsHelpTooltip.style.top = `${rect.bottom + window.scrollY}px`
     })
 
+    document.querySelector("#settings-import").addEventListener("click", function(){
+        const input = document.querySelector("#settings-import-input")
+        input.click()
+    })
+
+
     // Fetch the text icons
     textIcons = await getTextIcons()
 
@@ -109,7 +115,10 @@ let weaponData = []
 
     // Randomize on page load
     document.querySelectorAll(".randomize").forEach((e) => e.click())
+
+
 })()
+
 
 /**
  * Populates a list with items and adds functionality for toggling item visibility
@@ -186,6 +195,11 @@ function populateItemList(category, items, searchSelector) {
             // Update the selected count
             updateSelectedCount()
         })
+        // Update the hidden items in localStorage
+        updateHiddenItems(items)
+
+        // Update the selected count
+        updateSelectedCount()
     })
 
     // Set up search functionality
@@ -352,10 +366,11 @@ async function getWarframeData() {
         .then((data) => {
             const fetchedData = data
                 // Filter to only include Warframes (no mechs, companions, etc.)
-                .filter((warframe) => warframe.productCategory == "Suits" && warframe.name !== "Excalibur Umbra")
+                .filter((warframe) => warframe.productCategory == "Suits")
                 // Map the data to the desired format
                 .map((warframe) => ({
                     name: warframe.name,
+                    uniqueName: warframe.uniqueName,
                     description: replaceTextIcons(warframe.description),
                     image: `${IMAGE_BASE_URL}/${warframe.imageName}`,
                     hasPrime: warframe.isPrime,
@@ -367,12 +382,17 @@ async function getWarframeData() {
                 }))
                 // Reduce the data to remove duplicates and keep the base version of the Warframe (But with the Prime image)
                 .reduce((acc, warframe) => {
-                    const baseName = warframe.name.replace(" Prime", "")
+                    const baseName = warframe.name.replace(" Prime", "").replace(" Umbra", "")
                     if (!acc[baseName]) {
                         acc[baseName] = warframe
                     } else if (warframe.hasPrime) {
                         acc[baseName].image = warframe.image
                         acc[baseName].hasPrime = true
+                        acc[baseName].primeUniqueName = warframe.uniqueName
+                    }
+                    else if (warframe.name.includes("Umbra")) {
+                        acc[baseName].hasUmbra = true
+                        acc[baseName].umbraUniqueName = warframe.uniqueName
                     }
                     return acc
                 }, {})
@@ -410,6 +430,7 @@ async function getWeaponData() {
                 // Map the data to the desired format
                 .map((weapon) => ({
                     name: weapon.name,
+                    uniqueName: weapon.uniqueName,
                     description: replaceTextIcons(weapon.description),
                     type: weapon.type,
                     category: weapon.category,
@@ -434,6 +455,7 @@ async function getWeaponData() {
                         baseWeapon.variants = baseWeapon.variants || []
                         baseWeapon.variants.push({
                             name: weapon.name,
+                            uniqueName: weapon.uniqueName,
                             image: weapon.image,
                             description: weapon.description,
                             variantType,
@@ -444,7 +466,6 @@ async function getWeaponData() {
                 return true
             })
 
-            console.log(weaponList)
             return Object.values(weaponList)
         })
         .catch((error) => {
